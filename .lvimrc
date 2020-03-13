@@ -1,0 +1,1 @@
+nnoremap rr :w<cr>:!python3 %<cr>

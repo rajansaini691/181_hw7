@@ -1,14 +1,15 @@
-from keras.layers import Conv2D, Dense, Dropout, Activation, MaxPooling2D
-from keras.layers import Flatten
-from keras.datasets import cifar10
-from keras.models import Sequential
-from keras.utils import to_categorical
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Activation
+from tensorflow.keras.layers import Flatten, MaxPooling2D
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.optimizers import RMSprop
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
 # Set to True to force retraining
-retrain = False
+retrain = True
 
 # Create model
 model = Sequential([
@@ -26,7 +27,8 @@ model = Sequential([
     Activation('softmax', name='final_activation')
 ])
 
-model.compile(optimizer="rmsprop",
+rms = RMSprop(learning_rate=0.0005)
+model.compile(optimizer=rms,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
@@ -39,7 +41,7 @@ x_test = x_test.astype('float32') / 255
 
 if retrain:
     # Train model
-    history = model.fit(x_train, y_train, epochs=5, validation_split=0.2)
+    history = model.fit(x_train, y_train, epochs=8, validation_split=0.2)
 
     # Save model
     model.save("./model.h5")
